@@ -1,18 +1,17 @@
-package aaed1;
+package doublylinked;
+
+import list.ListEntry;
 
 public class DoublyLinkedListEntry extends ListEntry {
 	private DoublyLinkedListEntry next;
 	private DoublyLinkedListEntry prev;
 	
-	public DoublyLinkedListEntry(Object value, Object key){
-		this(value);
-		this.key = key;
+	public DoublyLinkedListEntry(Object value) {
+		super(value);
 	}
-	
-	public DoublyLinkedListEntry(Object value){
-		this.value = value;
-		this.next = null;
-		this.prev = null;
+
+	public DoublyLinkedListEntry(Object value, Object key) {
+		super(value,key);
 	}
 	
 	public void setNext(DoublyLinkedListEntry next){
@@ -29,5 +28,10 @@ public class DoublyLinkedListEntry extends ListEntry {
 	
 	public DoublyLinkedListEntry getPrev(){
 		return this.prev;
+	}
+	
+	@Override
+	public String toString() {
+		return super.toString();
 	}
 }

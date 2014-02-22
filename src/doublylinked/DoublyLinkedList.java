@@ -1,42 +1,42 @@
-package aaed1;
+package doublylinked;
+
+import list.List;
+import list.ListEntry;
 
 public class DoublyLinkedList implements List{
 	private DoublyLinkedListEntry inicio;
 	private int size;
 	private int maxSize;
 	
-	// Construtor sem especificar tamanho máximo
+	/**
+	 * Construtor com tamanho máximo não especificado.
+	 */
 	public DoublyLinkedList(){
 		this.inicio = null;
 		this.size = 0;
 		this.maxSize = -1;
 	}
-	//
 	
-	// Construtor especificando um tamanho máximo
+	/**
+	 * Construtor com tamanho máximo especificado.
+	 * @param maxSize Tamanho máximo da lista.
+	 */
 	public DoublyLinkedList(int maxSize){
 		this();
 		if(maxSize > 0) this.maxSize = maxSize;
-		else throw new IllegalArgumentException("MaxSize must be greater than zero.");
+		else throw new IllegalArgumentException("Tamanho máximo tem que ser maior que zero.");
 	}
-	//
 	
-	// Criar um novo nó
 	@Override
 	public ListEntry createListEntry(Object entryValue) {
 		return new DoublyLinkedListEntry(entryValue);
 	}
-	//
 	
-	// Verificar se a lista está vazia
 	@Override
 	public boolean listEmpty() {
-		//return (this.size == 0);
-		return (this.inicio == null);
+		return (this.size == 0);
 	}
-	//
 
-	// Verificar se a lista está cheia (se foi especificado um tam máx)
 	@Override
 	public boolean listFull() {
 		return ((this.maxSize != -1)&&(this.size == this.maxSize));
@@ -46,7 +46,6 @@ public class DoublyLinkedList implements List{
 	public void clearList() {
 		this.inicio = null;
 		this.size = 0;
-		// TODO: Deletar os nós da memória?
 	}
 
 	@Override
@@ -55,21 +54,32 @@ public class DoublyLinkedList implements List{
 	}
 
 	@Override
-	public void insertList(Object entryValue, int position) {
-		// Procura o nó na posicao indicada
-		DoublyLinkedListEntry temp = this.getNode(position);
-		
+	public void insertList(Object entryValue, int position) {		
 		// Cria um novo nó
 		DoublyLinkedListEntry newNode = (DoublyLinkedListEntry) createListEntry(entryValue);
 		
 		// Ajeita os "ponteiros"
-		// TODO: Consertar inserção no final da lista
-		newNode.setPrev(temp.getPrev());
-		newNode.setNext(temp);
-		temp.setPrev(newNode);
-		temp.getPrev().setNext(newNode);
+		if(this.listEmpty()) this.inicio = newNode;
+		else {
+			DoublyLinkedListEntry ant = this.getNode(position-1);
+			DoublyLinkedListEntry post = this.getNode(position);
+			
+			if(ant != null){
+				ant.setNext(newNode);
+				newNode.setPrev(ant);
+			}
+			if(post != null){
+				post.setPrev(newNode);
+				newNode.setNext(post);
+			}
+		}
+		
 		
 		this.size++;
+	}
+	
+	public void insertList(Object entryValue){
+		this.insertList(entryValue, this.listSize());
 	}
 	
 	@Override
@@ -86,22 +96,24 @@ public class DoublyLinkedList implements List{
 		return deletedNode;
 	}
 	
-	// Procura um nó pela posição
+	/**
+	 * Obter uma determinada posição da lista.
+	 * @param position Posição do nó a ser buscado.
+	 * @return Nó da posição requerida.
+	 */
 	public DoublyLinkedListEntry getNode(int position){
 		DoublyLinkedListEntry it = this.inicio;
 		
-		if(position > this.size) throw new IllegalArgumentException("Non-existent position.");
-		else if(position == this.size) return null;
+		if(position >= this.size) return null;
 		
 		for(int i=0; i < position; i++) it = it.getNext();
 		
 		return it;
 	}
-	//
 	
 	@Override
 	public void replaceList(Object entryValue, int position) {
-		if(position == this.size) throw new IllegalArgumentException("Null position");
+		if(position == this.size) throw new IllegalArgumentException("Posição não existente.");
 		
 		//Procura o nó a ser substituido
 		DoublyLinkedListEntry replacedNode = this.getNode(position);
@@ -116,18 +128,24 @@ public class DoublyLinkedList implements List{
 		replacedNode.getNext().setPrev(newNode);
 	}
 	
-	public DoublyLinkedListEntry setPosition(int position){
-		// TODO: O que fazer aqui?
-		return null;
+	/**
+	 * Obter nó da posição especificada.
+	 * @param position Posição do nó a ser buscado.
+	 * @return Nó na posição especificada.
+	 */
+	public DoublyLinkedListEntry getPosition(int position){
+		return this.getNode(position);
 	}
 	
-	public static void main(String[] args) {
-		 DoublyLinkedList lista = new DoublyLinkedList(4);
-		 lista.insertList(10, 0);
-		 lista.insertList(5, 1);
-		 lista.insertList(3, 2);
-		 lista.insertList(9, 4);
-		 lista.insertList(7, 5);
+	@Override
+	public String toString() {
+		String s = "[ ";
+		DoublyLinkedListEntry temp = this.inicio;
+		while(temp != null){
+			s += temp.toString() +" ";
+			temp = temp.getNext();
+		}
+		s += "]";
+		return s;
 	}
-
 }
