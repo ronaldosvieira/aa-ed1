@@ -8,6 +8,10 @@ public class ContiguousList implements List {
 	private int size;
 	private int maxSize;
 	
+	/**
+	 * Construtor da lista contígua circular.
+	 * @param maxSize	Tamanho máximo da lista.
+	 */
 	public ContiguousList(int maxSize){
 		this.size = 0;
 		if(maxSize > 0) this.maxSize = maxSize;
@@ -56,6 +60,10 @@ public class ContiguousList implements List {
 		this.size++;
 	}
 	
+	/**
+	 * Inserir no final da lista.
+	 * @param entryValue Valor do novo nó da lista.
+	 */
 	public void insertList(Object entryValue){
 		this.insertList(entryValue,this.listSize());
 	}
